@@ -1,0 +1,23 @@
+<odoo>
+    <data>
+        <record model="ir.actions.server" id="soj_reports.create_report_action">
+            <field name="name">Create Report Action</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="state">code</field>
+            <field name="code">
+reportServer = env['ir.config_parameter'].sudo().get_param('http.report')
+action = { "type": "ir.actions.act_url",
+                "url": reportServer + "?id=123&amp;reportType=101",
+                "target": "new", }
+            </field>
+        </record>
+
+        <menuitem id="soj_reports.create_report"
+                  parent="sale.menu_sale_report"
+                  name="Export to FOCUS"
+                  action="soj_reports.create_report_action"
+                  groups="sales_team.group_sale_manager"
+                  sequence="99"/>
+    </data>
+</odoo>
