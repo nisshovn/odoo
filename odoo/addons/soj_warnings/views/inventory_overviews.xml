@@ -1,0 +1,86 @@
+<odoo>
+    <data>
+        <!--Create menu item for default inventory dashboard-->
+        <menuitem id="stock_operation_types_overviews" name="Operation Types" parent="stock.menu_stock_warehouse_mgmt"
+                  action="stock.stock_picking_type_action" sequence="0"/>
+
+        <!--Change the title of default inventory dashboard from "Inventory Overview" to "Operation Types"-->
+        <record id="stock.stock_picking_type_action" model="ir.actions.act_window">
+            <field name="name">Operation Types</field>
+        </record>
+
+        <!--Create new view for Inventory Dashboard-->
+        <record id="product_aging_search" model="ir.ui.view">
+            <field name="name">Product Aging Search</field>
+            <field name="model">stock.quant</field>
+            <field name="arch" type="xml">
+                <search string="Product Aging">
+                    <field name="product_id"/>
+                    <field name="location_id"/>
+                    <group expand='0' string='Filters'>
+                        <filter name='internal_loc' string="Internal Locations"
+                                domain="[('location_id.usage','=', 'internal')]"/>
+                        <separator/>
+                        <filter name="by_3_months" string="0 - 3 months" domain="[('product_age_cat', '=', '0 - 3 months')]"/>
+                        <filter name="by_6_months" string="3 - 6 months" domain="[('product_age_cat', '=', '3 - 6 months')]"/>
+                        <filter name="by_12_months" string="6 - 12 months" domain="[('product_age_cat', '=', '6 - 12 months')]"/>
+                        <filter name="by_overdue" string="Over 12 months" domain="[('product_age_cat', '=', 'Over 12 months')]"/>
+                    </group>
+                    <group expand='0' string='Group By'>
+                        <filter string='Location' name="location_group" context="{'group_by': 'location_id'}"/>
+                        <filter name="by_age_cat" string="Product Age" context="{'group_by': 'product_age_cat'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="product_aging_tree" model="ir.ui.view">
+            <field name="name">Product Aging Tree</field>
+            <field name="model">stock.quant</field>
+            <field name="arch" type="xml">
+                <tree string="Product Aging" decoration-primary="product_age_cat=='0 - 3 months'"
+                      decoration-info="product_age_cat=='3 - 6 months'"
+                      decoration-warning="product_age_cat=='6 - 12 months'"
+                      decoration-danger="product_age_cat=='Over 12 months'">
+                    <field name="location_id"/>
+                    <field name="product_id"/>
+                    <field name="product_age_cat" string="Product Age"/>
+                    <field name="quantity"/>
+                    <field name="in_date" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="product_aging_action" model="ir.actions.act_window">
+            <field name="name">Product Aging</field>
+            <field name="res_model">stock.quant</field>
+            <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="product_aging_search"/>
+            <field name="view_id" ref="product_aging_tree"/>
+            <field name="domain">[('quantity', '&gt;', 0.0)]</field>
+            <field name="context">{
+                'search_default_internal_loc': 1,
+                'search_default_location_group': 1,
+                'search_default_by_age_cat': 1
+                }
+            </field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_empty_folder">
+                    No inventory found
+                </p>
+                <p>
+                    This analysis gives you a fast overview on the current stock level of your products and their
+                    current inventory value.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="stock_aging_overviews" name="Product Aging" parent="stock.menu_warehouse_report"
+                  action="product_aging_action" sequence="120"/>
+
+        <!--Change action of Inventory Overview to new view-->
+        <!--<record model="ir.ui.menu" id="stock.stock_picking_type_menu">-->
+        <!--<field name="action">soj_warnings.product_aging_action</field>-->
+        <!--</record>-->
+    </data>
+</odoo>
