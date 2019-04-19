@@ -26,5 +26,6 @@
     'data': [
         # 'security/ir.model.access.csv',
         'views/inventory_overviews.xml',
+        'data/product_age_cat.xml',
     ],
 }
