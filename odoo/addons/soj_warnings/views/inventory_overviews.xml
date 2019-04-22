@@ -21,10 +21,14 @@
                         <filter name='internal_loc' string="Internal Locations"
                                 domain="[('location_id.usage','=', 'internal')]"/>
                         <separator/>
-                        <filter name="by_3_months" string="0 - 3 months" domain="[('product_age_cat', '=', '0 - 3 months')]"/>
-                        <filter name="by_6_months" string="3 - 6 months" domain="[('product_age_cat', '=', '3 - 6 months')]"/>
-                        <filter name="by_12_months" string="6 - 12 months" domain="[('product_age_cat', '=', '6 - 12 months')]"/>
-                        <filter name="by_overdue" string="Over 12 months" domain="[('product_age_cat', '=', 'Over 12 months')]"/>
+                        <filter name="by_3_months" string="0 - 3 months"
+                                domain="[('product_age_cat', '=', '0 - 3 months')]"/>
+                        <filter name="by_6_months" string="3 - 6 months"
+                                domain="[('product_age_cat', '=', '3 - 6 months')]"/>
+                        <filter name="by_12_months" string="6 - 12 months"
+                                domain="[('product_age_cat', '=', '6 - 12 months')]"/>
+                        <filter name="by_overdue" string="Over 12 months"
+                                domain="[('product_age_cat', '=', 'Over 12 months')]"/>
                     </group>
                     <group expand='0' string='Group By'>
                         <filter string='Location' name="location_group" context="{'group_by': 'location_id'}"/>
@@ -78,9 +82,9 @@
         <menuitem id="stock_aging_overviews" name="Product Aging" parent="stock.menu_warehouse_report"
                   action="product_aging_action" sequence="120"/>
 
-        <!--Change action of Inventory Overview to new view-->
-        <!--<record model="ir.ui.menu" id="stock.stock_picking_type_menu">-->
-        <!--<field name="action">soj_warnings.product_aging_action</field>-->
-        <!--</record>-->
+        <!--Change action of Inventory Dashboard to Product Aging view-->
+        <record model="ir.ui.menu" id="stock.stock_picking_type_menu">
+            <field name="action" ref="product_aging_action"/>
+        </record>
     </data>
 </odoo>
