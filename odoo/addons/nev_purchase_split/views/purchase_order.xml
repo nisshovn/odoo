@@ -1,0 +1,45 @@
+<odoo>
+    <record id="invoice_form_my" model="ir.ui.view">
+        <field name="name">purchase.order.split.form</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group//group[2]" position="inside">
+                <field name="parent_id" attrs="{'invisible': [('parent_id','=',False)]}"/>
+                <field name="child_count" invisible="1"/>
+            </xpath>
+            <xpath expr="//button[@name='button_confirm']" position="after">
+                <button name="button_split" type="object" string="Split Order" id="draft_split"
+                        attrs="{'invisible':['|', ('parent_id', '!=', False), ('child_count', '&gt;', 0)]}"/>
+            </xpath>
+            <xpath expr="//page[@name='products']" position="attributes">
+                <attribute name="attrs">{'invisible':[('child_count', '&gt;', 0)]}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='purchase_delivery_invoice']" position="before">
+                <page string="Child Orders" name="splitted_order" attrs="{'invisible': [('child_count','=',0)]}">
+                    <field name="child_ids">
+                        <tree string="Purchase Orders" default_order="date_planned">
+                            <field name="parent_id" invisible="1"/>
+                            <field name="name"/>
+                            <field name="date_planned"/>
+                            <field name="amount_total" widget="monetary" string="SubTotal"/>
+                        </tree>
+                    </field>
+                    <group class="oe_subtotal_footer oe_right">
+                        <field name="parent_amount_untaxed" widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+                        <field name="parent_amount_tax" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        <div class="oe_subtotal_footer_separator oe_inline">
+                            <label for="parent_amount_total"/>
+                        </div>
+                        <field name="parent_amount_total" nolabel="1" class="oe_subtotal_footer_separator"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+                    </group>
+                    <field name="notes" class="oe_inline" placeholder="Define your terms and conditions ..."/>
+                    <div class="oe_clear"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
